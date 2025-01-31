@@ -1,3 +1,7 @@
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
+
 export const createLending = async (request, reply) => {
   const { bookId, memberId } = request.body;
   const createdBy = request.user.id;

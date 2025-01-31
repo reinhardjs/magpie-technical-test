@@ -1,4 +1,8 @@
-export const getPopularBooks = async (request, reply) => {
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
+
+export const getPopularBooks = async (req, res) => {
   try {
     const popularBooks = await prisma.book.findMany({
       include: {
@@ -16,7 +20,8 @@ export const getPopularBooks = async (request, reply) => {
 
     return popularBooks;
   } catch (error) {
-    return reply.status(500).send({ error: 'Failed to retrieve popular books' });
+    console.error('Error in getPopularBooks:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
 
