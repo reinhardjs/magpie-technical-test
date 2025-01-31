@@ -1,5 +1,6 @@
 import Fastify from 'fastify';
 import swagger from '@fastify/swagger';
+import swaggerUi from '@fastify/swagger-ui';
 import cors from '@fastify/cors';
 import { PrismaClient } from '@prisma/client';
 
@@ -19,11 +20,7 @@ fastify.register(swagger, {
     info: {
       title: 'Digital Library API',
       description: 'API documentation for Digital Library Management System',
-      version: '1.0.0',
-      contact: {
-        name: 'API Support',
-        email: 'support@library.com'
-      }
+      version: '1.0.0'
     },
     servers: [
       {
@@ -38,24 +35,44 @@ fastify.register(swagger, {
           scheme: 'bearer',
           bearerFormat: 'JWT'
         }
+      },
+      schemas: {
+        AuthResponse: {
+          type: 'object',
+          properties: {
+            token: { type: 'string' },
+            user: {
+              type: 'object',
+              properties: {
+                id: { type: 'number' },
+                email: { type: 'string' },
+                role: { type: 'string' }
+              }
+            }
+          }
+        }
       }
     },
-    tags: [
-      { name: 'Auth', description: 'Authentication endpoints' },
-      { name: 'Books', description: 'Book management endpoints' },
-      { name: 'Members', description: 'Member management endpoints' },
-      { name: 'Lendings', description: 'Book lending management endpoints' },
-      { name: 'Categories', description: 'Book category management endpoints' },
-      { name: 'Analytics', description: 'Library analytics endpoints' }
-    ]
-  },
-  hideUntagged: true,
-  exposeRoute: true
+    security: [{ bearerAuth: [] }]
+  }
 });
 
-// CORS
+// Swagger UI configuration
+fastify.register(swaggerUi, {
+  routePrefix: '/documentation',
+  uiConfig: {
+    docExpansion: 'list',
+    deepLinking: false,
+    persistAuthorization: true
+  },
+  staticCSP: true,
+  transformStaticCSP: (header) => header
+});
+
+// Register CORS before routes
 fastify.register(cors, {
-  origin: '*',
+  origin: true,
+  credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE']
 });
 
