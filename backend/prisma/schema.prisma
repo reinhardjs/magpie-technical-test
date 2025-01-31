@@ -1,0 +1,85 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  password  String
+  name      String
+  role      String
+  members   Member[]
+  books     Book[]
+  lendings  Lending[]
+
+  @@map("users")
+}
+
+model Member {
+  id          Int       @id @default(autoincrement())
+  userId      Int       @map("user_id")
+  name        String
+  email       String
+  phone       String?
+  status      String
+  joinedDate  DateTime  @map("joined_date")
+  user        User      @relation(fields: [userId], references: [id])
+  lendings    Lending[]
+
+  @@map("members")
+}
+
+model Book {
+  id          Int          @id @default(autoincrement())
+  title       String
+  author      String
+  isbn        String
+  quantity    Int
+  categoryId  Int          @map("category_id")
+  createdBy   Int          @map("created_by")
+  category    Category     @relation(fields: [categoryId], references: [id])
+  creator     User         @relation(fields: [createdBy], references: [id])
+  status      BookStatus?
+  lendings    Lending[]
+
+  @@map("books")
+}
+
+model Category {
+  id     Int     @id @default(autoincrement())
+  name   String
+  books  Book[]
+
+  @@map("categories")
+}
+
+model Lending {
+  id           Int       @id @default(autoincrement())
+  bookId       Int       @map("book_id")
+  memberId     Int       @map("member_id")
+  borrowedDate DateTime  @map("borrowed_date")
+  dueDate      DateTime  @map("due_date")
+  returnDate   DateTime? @map("return_date")
+  status       String
+  createdBy    Int       @map("created_by")
+  book         Book      @relation(fields: [bookId], references: [id])
+  member       Member    @relation(fields: [memberId], references: [id])
+  creator      User      @relation(fields: [createdBy], references: [id])
+
+  @@map("lending")
+}
+
+model BookStatus {
+  id           Int   @id @default(autoincrement())
+  bookId       Int   @unique @map("book_id")
+  availableQty Int   @map("available_qty")
+  borrowedQty  Int   @map("borrowed_qty")
+  book         Book  @relation(fields: [bookId], references: [id])
+
+  @@map("book_status")
+}
