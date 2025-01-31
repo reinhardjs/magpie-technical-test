@@ -8,6 +8,7 @@ import bookRoutes from './routes/bookRoutes.js';
 import memberRoutes from './routes/memberRoutes.js';
 import lendingRoutes from './routes/lendingRoutes.js';
 import analyticsRoutes from './routes/analyticsRoutes.js';
+import categoryRoutes from './routes/categoryRoutes.js';
 
 const prisma = new PrismaClient();
 const fastify = Fastify({ logger: true });
@@ -39,6 +40,7 @@ fastify.register(authRoutes, { prefix: '/api/auth' });
 fastify.register(bookRoutes, { prefix: '/api/books' });
 fastify.register(memberRoutes, { prefix: '/api/members' });
 fastify.register(lendingRoutes, { prefix: '/api/lendings' });
+fastify.register(categoryRoutes, { prefix: '/api/categories' });
 fastify.register(analyticsRoutes, { prefix: '/api/analytics' });
 
 // Global error handler

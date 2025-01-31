@@ -1,13 +1,13 @@
-export default async function categoryRoutes(fastify, opts) {
-  const {
-    createCategory,
-    getAllCategories,
-    getCategoryById,
-    updateCategory,
-    deleteCategory
-  } = require('../controllers/categoryController');
-  const { authenticate, authorize } = require('../middleware/authMiddleware');
+import { 
+  createCategory,
+  getAllCategories,
+  getCategoryById,
+  updateCategory,
+  deleteCategory
+} from '../controllers/categoryController.js';
+import { authenticate, authorize } from '../middleware/authMiddleware.js';
 
+export default async function categoryRoutes(fastify, opts) {
   const categorySchema = {
     body: {
       type: 'object',
