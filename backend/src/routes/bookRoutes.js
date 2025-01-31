@@ -1,6 +1,6 @@
-import { 
-  createBook, 
-  getAllBooks, 
+import {
+  createBook,
+  getAllBooks,
   updateBook,
 } from '../controllers/bookController.js';
 
@@ -26,30 +26,30 @@ export default async function bookRoutes(fastify, opts) {
   fastify.addHook('preHandler', authenticate);
 
   // Create a new book (Admin/Librarian only)
-  fastify.post('/', 
-    { 
-      schema: bookSchema, 
+  fastify.post('/',
+    {
+      schema: bookSchema,
       preHandler: [
         authorize(['ADMIN', 'LIBRARIAN'])
-      ] 
-    }, 
+      ]
+    },
     createBook
   );
 
   // Get all books (All authenticated users)
-  fastify.get('/', 
-    { preHandler: authorize(['ADMIN', 'LIBRARIAN', 'MEMBER']) }, 
+  fastify.get('/',
+    { preHandler: authorize(['ADMIN', 'LIBRARIAN', 'MEMBER']) },
     getAllBooks
   );
 
   // Update a book (Admin/Librarian only)
-  fastify.put('/:id', 
-    { 
-      schema: bookSchema, 
+  fastify.put('/:id',
+    {
+      schema: bookSchema,
       preHandler: [
         authorize(['ADMIN', 'LIBRARIAN'])
-      ] 
-    }, 
+      ]
+    },
     updateBook
   );
 }
