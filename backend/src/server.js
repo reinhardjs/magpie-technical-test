@@ -16,44 +16,35 @@ const fastify = Fastify({ logger: true });
 
 // Swagger configuration
 fastify.register(swagger, {
-  openapi: {
+  swagger: {
     info: {
       title: 'Digital Library API',
       description: 'API documentation for Digital Library Management System',
       version: '1.0.0'
     },
-    servers: [
-      {
-        url: 'http://localhost:3000',
-        description: 'Development server'
+    securityDefinitions: {
+      bearerAuth: {
+        type: 'apiKey',
+        name: 'Authorization',
+        in: 'header'
       }
-    ],
-    components: {
-      securitySchemes: {
-        bearerAuth: {
-          type: 'http',
-          scheme: 'bearer',
-          bearerFormat: 'JWT'
-        }
-      },
-      schemas: {
-        AuthResponse: {
-          type: 'object',
-          properties: {
-            token: { type: 'string' },
-            user: {
-              type: 'object',
-              properties: {
-                id: { type: 'number' },
-                email: { type: 'string' },
-                role: { type: 'string' }
-              }
+    },
+    schemas: {
+      LoginResponse: {
+        type: 'object',
+        properties: {
+          token: { type: 'string' },
+          user: {
+            type: 'object',
+            properties: {
+              id: { type: 'integer' },
+              email: { type: 'string' },
+              role: { type: 'string' }
             }
           }
         }
       }
-    },
-    security: [{ bearerAuth: [] }]
+    }
   }
 });
 

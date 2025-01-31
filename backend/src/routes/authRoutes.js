@@ -21,7 +21,7 @@ export default async function authRoutes(fastify, opts) {
         type: 'object',
         properties: {
           message: { type: 'string' },
-          userId: { type: 'number' }
+          userId: { type: 'integer' }
         }
       }
     }
@@ -41,7 +41,18 @@ export default async function authRoutes(fastify, opts) {
     response: {
       200: {
         description: 'Successful login',
-        $ref: '#/components/schemas/AuthResponse'
+        type: 'object',
+        properties: {
+          token: { type: 'string' },
+          user: {
+            type: 'object',
+            properties: {
+              id: { type: 'integer' },
+              email: { type: 'string' },
+              role: { type: 'string' }
+            }
+          }
+        }
       }
     }
   };
