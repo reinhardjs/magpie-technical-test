@@ -1,5 +1,7 @@
 # Digital Library Management System
 
+![image](https://github.com/user-attachments/assets/15112fcc-fa44-475a-9351-2f7afa79df57)
+
 ## Backend
 
 A robust REST API backend for managing a digital library system built with Fastify, Prisma, and PostgreSQL.
