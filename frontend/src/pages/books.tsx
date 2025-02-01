@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
-import Layout from '@/components/layout';
+import Layout from '@/components/Layout';
 import BookList from '@/components/BookList';
 import BookForm from '@/components/BookForm';
 import { booksApi } from '@/services/api';

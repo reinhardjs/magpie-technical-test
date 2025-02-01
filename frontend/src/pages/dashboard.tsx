@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, LineChart, Line } from 'recharts';
-import Layout from '@/components/layout';
+import Layout from '@/components/Layout';
 import { analyticsApi } from '@/services/api';
 import { format } from 'date-fns';
 
