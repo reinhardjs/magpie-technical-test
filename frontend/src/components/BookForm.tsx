@@ -18,7 +18,7 @@ export default function BookForm({ onSuccess, initialData }: BookFormProps) {
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState(initialData?.categoryId || '');
+  const [selectedCategory, setSelectedCategory] = useState<number | undefined>();
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -39,6 +39,11 @@ export default function BookForm({ onSuccess, initialData }: BookFormProps) {
 
     fetchCategories();
   }, []);
+
+    // Handle category selection
+    const handleCategoryChange = (e: any) => {
+      setSelectedCategory(e.target.value);
+    };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -153,7 +158,7 @@ export default function BookForm({ onSuccess, initialData }: BookFormProps) {
                 <select
                   className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-3 py-2"
                   value={selectedCategory}
-                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  onInput={handleCategoryChange}
                   required
                 >
                   <option value="">Select a category</option>
