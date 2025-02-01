@@ -18,12 +18,18 @@ export default function BookForm({ onSuccess, initialData }: BookFormProps) {
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState(initialData?.categoryId || '');
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const { data } = await categoriesApi.getAll();
         setCategories(data);
+
+        if (initialData?.categoryId) {
+          setSelectedCategory(initialData.categoryId);
+        }
+
       } catch (error: any) {
         const message = error.response?.data?.error || 'Failed to fetch categories';
         setError(message);
@@ -146,7 +152,8 @@ export default function BookForm({ onSuccess, initialData }: BookFormProps) {
               <Form.Control asChild>
                 <select
                   className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-3 py-2"
-                  value={Number(initialData?.categoryId)}
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
                   required
                 >
                   <option value="">Select a category</option>
