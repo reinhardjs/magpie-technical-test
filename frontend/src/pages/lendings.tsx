@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import * as Form from '@radix-ui/react-form';
-import Layout from '@/components/layout';
+import Layout from '@/components/Layout';
 import { lendingsApi, booksApi } from '@/services/api';
 import { format } from 'date-fns';
+import LendingForm from '@/components/LendingForm';
 
 interface Lending {
   id: number;
@@ -86,15 +87,10 @@ export default function Lendings() {
                 <Dialog.Title className="text-xl font-semibold mb-4">
                   New Lending
                 </Dialog.Title>
-                <Form.Root onSubmit={async (e) => {
-                  e.preventDefault();
-                  const formData = new FormData(e.currentTarget);
-                  await lendingsApi.create(Object.fromEntries(formData));
-                  setIsAddDialogOpen(false);
-                  fetchLendings();
-                }}>
-                  {/* Add form fields */}
-                </Form.Root>
+                <LendingForm 
+                  onSuccess={fetchLendings}
+                  onClose={() => setIsAddDialogOpen(false)}
+                />
               </Dialog.Content>
             </Dialog.Portal>
           </Dialog.Root>
@@ -102,13 +98,13 @@ export default function Lendings() {
 
         <table className="min-w-full">
           <thead>
-            <tr className="border-b">
-              <th className="text-left py-4">Book</th>
-              <th className="text-left py-4">Member</th>
-              <th className="text-left py-4">Borrowed Date</th>
-              <th className="text-left py-4">Due Date</th>
-              <th className="text-left py-4">Status</th>
-              <th className="text-left py-4">Actions</th>
+            <tr>
+              <th className="px-6 py-3 text-left text-xs uppercase tracking-wider">Book</th>
+              <th className="px-6 py-3 text-left text-xs uppercase tracking-wider">Member</th>
+              <th className="px-6 py-3 text-left text-xs uppercase tracking-wider">Borrowed Date</th>
+              <th className="px-6 py-3 text-left text-xs uppercase tracking-wider">Due Date</th>
+              <th className="px-6 py-3 text-left text-xs uppercase tracking-wider">Status</th>
+              <th className="px-6 py-3 text-left text-xs uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
           <tbody>
