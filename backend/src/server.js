@@ -26,9 +26,13 @@ fastify.register(swagger, {
       bearerAuth: {
         type: 'apiKey',
         name: 'Authorization',
-        in: 'header'
+        in: 'header',
+        description: 'Enter your bearer token in the format "Bearer {token}"'
       }
     },
+    security: [{
+      bearerAuth: []
+    }],
     schemas: {
       LoginResponse: {
         type: 'object',
