@@ -4,9 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 9000",
-    "build": "next build",
+    "build": "next build", 
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "vitest",
+    "test:watch": "vitest watch",
+    "test:coverage": "vitest run --coverage",
+    "test:ui": "vitest --ui"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.5",
@@ -18,20 +22,27 @@
     "axios": "^1.7.9",
     "date-fns": "^4.1.0",
     "next": "15.1.6",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
     "react-hot-toast": "^2.5.1",
     "recharts": "^2.15.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/jest-dom": "^6.1.0",
     "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "@vitejs/plugin-react": "^4.2.1",
+    "@vitest/coverage-v8": "^0.34.0",
+    "@vitest/ui": "^0.34.0",
     "eslint": "^9",
     "eslint-config-next": "15.1.6",
+    "jsdom": "^22.1.0",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^0.34.0"
   }
 }
