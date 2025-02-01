@@ -10,6 +10,8 @@ interface Book {
   title: string;
   author: string;
   isbn: string;
+  quantity: number;
+  categoryId: number;
   status: {
     availableQty: number;
     borrowedQty: number;
@@ -36,14 +38,14 @@ export default function BookList({ books, onUpdate }: BookListProps) {
       await booksApi.delete(deletingBook.id);
       toast.success('Book deleted successfully');
       onUpdate();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to delete book:', {
         id: deletingBook.id,
-        error: error.message,
-        response: error.response?.data
+        error: error instanceof Error ? error.message : 'Unknown error',
+        response: (error as { response?: { data?: unknown } })?.response?.data
       });
       
-      const message = error.response?.data?.error || 'Failed to delete book';
+      const message = (error as { response?: { data?: { error?: string } } })?.response?.data?.error || 'Failed to delete book';
       toast.error(message);
     } finally {
       setDeletingBook(null);
@@ -122,7 +124,7 @@ export default function BookList({ books, onUpdate }: BookListProps) {
                           Confirm Deletion
                         </Dialog.Title>
                         <p className="text-gray-600 mb-6">
-                          Are you sure you want to delete "{book.title}"? This action cannot be undone.
+                          Are you sure you want to delete &quot;{book.title}&quot;? This action cannot be undone.
                         </p>
                         <div className="flex justify-end space-x-3">
                           <Dialog.Close asChild>

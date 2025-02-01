@@ -1,20 +1,19 @@
-import '@testing-library/jest-dom';
-import { vi } from 'vitest';
+import '@testing-library/jest-dom'
 
 // Mock Next.js router
-vi.mock('next/router', () => ({
+jest.mock('next/router', () => ({
   useRouter: () => ({
-    push: vi.fn(),
+    push: jest.fn(),
     pathname: '/',
   }),
-}));
+}))
 
 // Mock localStorage
 const localStorageMock = {
-  getItem: vi.fn(),
-  setItem: vi.fn(),
-  removeItem: vi.fn(),
-  clear: vi.fn(),
-};
+  getItem: jest.fn(),
+  setItem: jest.fn(),
+  removeItem: jest.fn(),
+  clear: jest.fn(),
+} as unknown as Storage;
 
-global.localStorage = localStorageMock;
+Object.defineProperty(window, 'localStorage', { value: localStorageMock })

@@ -34,36 +34,48 @@ api.interceptors.response.use(
 export const authApi = {
   login: (data: { email: string; password: string }) => 
     api.post('/auth/login', data),
-  register: (data: any) => api.post('/auth/register', data)
+  register: (data: { email: string; password: string; name: string }) => api.post('/auth/register', data)
 };
 
 export const booksApi = {
   getAll: () => api.get('/books'),
-  create: (data: any) => api.post('/books', data),
-  update: (id: number, data: any) => api.put(`/books/${id}`, data),
+  create: (data: { 
+    title: string; 
+    author: string; 
+    isbn: string; 
+    quantity: number;
+    categoryId: number;
+  }) => api.post('/books', data),
+  update: (id: number, data: { 
+    title?: string; 
+    author?: string; 
+    isbn?: string; 
+    quantity?: number;
+    categoryId?: number;
+  }) => api.put(`/books/${id}`, data),
   delete: (id: number) => api.delete(`/books/${id}`)
 };
 
 export const categoriesApi = {
   getAll: () => api.get('/categories'),
-  create: (data: any) => api.post('/categories', data),
-  update: (id: number, data: any) => api.put(`/categories/${id}`, data),
+  create: (data: { name: string; description: string }) => api.post('/categories', data),
+  update: (id: number, data: { name?: string; description?: string }) => api.put(`/categories/${id}`, data),
   delete: (id: number) => api.delete(`/categories/${id}`)
 };
 
 export const membersApi = {
   getAll: () => api.get('/members'),
   getById: (id: number) => api.get(`/members/${id}`),
-  create: (data: any) => api.post('/members', data),
-  update: (id: number, data: any) => api.put(`/members/${id}`, data),
+  create: (data: { name: string; email: string; phone: string }) => api.post('/members', data),
+  update: (id: number, data: { name?: string; email?: string; phone?: string }) => api.put(`/members/${id}`, data),
   delete: (id: number) => api.delete(`/members/${id}`)
 };
 
 export const lendingsApi = {
   getAll: () => api.get('/lendings'),
-  create: (data: any) => api.post('/lendings', data),
+  create: (data: { bookId: number; memberId: number; dueDate: string }) => api.post('/lendings', data),
   return: (id: number) => api.put(`/lendings/${id}/return`),
-  update: (id: number, data: any) => api.put(`/lendings/${id}`, data)
+  update: (id: number, data: { dueDate?: string; status?: 'active' | 'returned' }) => api.put(`/lendings/${id}`, data)
 };
 
 export const analyticsApi = {

@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
-import * as Form from '@radix-ui/react-form';
 import Layout from '@/components/Layout';
-import { lendingsApi, booksApi } from '@/services/api';
+import { lendingsApi } from '@/services/api';
 import { format } from 'date-fns';
 import LendingForm from '@/components/LendingForm';
 import { canManageLibrary } from '../utils/auth';
@@ -26,12 +25,10 @@ export default function Lendings() {
   const [lendings, setLendings] = useState<Lending[]>([]);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [books, setBooks] = useState([]);
 
   useEffect(() => {
     if (!canManageLibrary()) return
     fetchLendings();
-    fetchBooks();
   }, []);
 
   const fetchLendings = async () => {
@@ -40,15 +37,6 @@ export default function Lendings() {
       setLendings(response.data);
     } catch (error) {
       console.error('Failed to fetch lendings:', error);
-    }
-  };
-
-  const fetchBooks = async () => {
-    try {
-      const response = await booksApi.getAll();
-      setBooks(response.data);
-    } catch (error) {
-      console.error('Failed to fetch books:', error);
     }
   };
 

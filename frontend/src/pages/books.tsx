@@ -6,8 +6,24 @@ import BookForm from '@/components/BookForm';
 import { booksApi } from '@/services/api';
 import { canManageLibrary } from '../utils/auth';
 
+interface Book {
+  id: number;
+  title: string;
+  author: string;
+  isbn: string;
+  quantity: number;
+  categoryId: number;
+  status: {
+    availableQty: number;
+    borrowedQty: number;
+  };
+  category: {
+    name: string;
+  };
+}
+
 export default function Books() {
-  const [books, setBooks] = useState([]);
+  const [books, setBooks] = useState<Book[]>([]);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const showActions = canManageLibrary();

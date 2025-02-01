@@ -9,9 +9,25 @@ interface Category {
   name: string;
 }
 
+interface Book {
+  id: number;
+  title: string;
+  author: string;
+  isbn: string;
+  quantity: number;
+  categoryId: number;
+  status: {
+    availableQty: number;
+    borrowedQty: number;
+  };
+  category: {
+    name: string;
+  };
+}
+
 interface BookFormProps {
   onSuccess: () => void;
-  initialData?: any;
+  initialData?: Book;
 }
 
 export default function BookForm({ onSuccess, initialData }: BookFormProps) {
@@ -30,49 +46,51 @@ export default function BookForm({ onSuccess, initialData }: BookFormProps) {
           setSelectedCategory(initialData.categoryId);
         }
 
-      } catch (error: any) {
-        const message = error.response?.data?.error || 'Failed to fetch categories';
+      } catch (error: unknown) {
+        const message = error instanceof Error 
+          ? error.message 
+          : 'Failed to fetch categories';
         setError(message);
         toast.error(message);
       }
     };
 
     fetchCategories();
-  }, []);
+  }, [initialData?.categoryId]);
 
-    // Handle category selection
-    const handleCategoryChange = (e: any) => {
-      setSelectedCategory(e.target.value);
-    };
+  // Handle category selection
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedCategory(Number(e.target.value));
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setError('');
     setLoading(true);
-    setError(null);
 
     try {
       const formData = new FormData(e.currentTarget);
-      const data = Object.fromEntries(formData);
-      
-      // Validate required fields
-      const requiredFields = ['title', 'author', 'isbn', 'quantity', 'categoryId'];
-      for (const field of requiredFields) {
-        if (!data[field]) {
-          throw new Error(`${field} is required`);
-        }
-      }
+      const formValues = {
+        title: formData.get('title') as string,
+        author: formData.get('author') as string,
+        isbn: formData.get('isbn') as string,
+        quantity: Number(formData.get('quantity')),
+        categoryId: Number(formData.get('categoryId')),
+      };
 
       if (initialData) {
-        await booksApi.update(initialData.id, data);
+        await booksApi.update(initialData.id, formValues);
         toast.success('Book updated successfully');
       } else {
-        await booksApi.create(data);
+        await booksApi.create(formValues);
         toast.success('Book created successfully');
       }
 
       onSuccess();
-    } catch (error: any) {
-      const message = error.response?.data?.error || error.message || 'Failed to save book';
+    } catch (error: unknown) {
+      const message = error instanceof Error 
+        ? error.message 
+        : 'Failed to save book';
       setError(message);
       toast.error(message);
     } finally {
@@ -193,4 +211,4 @@ export default function BookForm({ onSuccess, initialData }: BookFormProps) {
       </Dialog.Content>
     </Dialog.Portal>
   );
-} 
+}

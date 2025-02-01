@@ -1,16 +1,15 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { vi } from 'vitest';
 import Books from '@/pages/books';
 import { booksApi } from '@/services/api';
 import { AuthProvider } from '@/contexts/AuthContext';
 
 // Mock the API calls
-vi.mock('@/services/api', () => ({
+jest.mock('@/services/api', () => ({
   booksApi: {
-    getAll: vi.fn(),
-    create: vi.fn(),
-    update: vi.fn(),
-    delete: vi.fn(),
+    getAll: jest.fn(),
+    create: jest.fn(),
+    update: jest.fn(),
+    delete: jest.fn(),
   },
 }));
 
@@ -28,7 +27,7 @@ const mockBooks = [
 describe('Book Operations Integration', () => {
   beforeEach(() => {
     localStorage.clear();
-    vi.clearAllMocks();
+    jest.clearAllMocks();
     // Mock successful book fetch
     booksApi.getAll.mockResolvedValue({ data: mockBooks });
   });

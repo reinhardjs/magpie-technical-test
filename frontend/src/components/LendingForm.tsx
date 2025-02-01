@@ -38,8 +38,10 @@ export default function LendingForm({ onSuccess, onClose }: LendingFormProps) {
     try {
       const { data } = await booksApi.getAll();
       setBooks(data.filter((book: Book) => book.status.availableQty > 0));
-    } catch (error: any) {
-      const message = error.response?.data?.error || 'Failed to fetch books';
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 
+        'response' in (error as object) ? ((error as {response?: {data?: {error?: string}}}).response?.data?.error || 'Failed to fetch books') :
+        'Failed to fetch books';
       setError(message);
       toast.error(message);
     }
@@ -49,8 +51,10 @@ export default function LendingForm({ onSuccess, onClose }: LendingFormProps) {
     try {
       const { data } = await membersApi.getAll();
       setMembers(data.filter((member: Member) => member.status === 'ACTIVE'));
-    } catch (error: any) {
-      const message = error.response?.data?.error || 'Failed to fetch members';
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message :
+        'response' in (error as object) ? ((error as {response?: {data?: {error?: string}}}).response?.data?.error || 'Failed to fetch members') :
+        'Failed to fetch members';
       setError(message);
       toast.error(message);
     }
@@ -65,15 +69,18 @@ export default function LendingForm({ onSuccess, onClose }: LendingFormProps) {
       const formData = new FormData(e.currentTarget);
       const data = {
         bookId: Number(formData.get('bookId')),
-        memberId: Number(formData.get('memberId'))
+        memberId: Number(formData.get('memberId')),
+        dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString() // 14 days from now
       };
 
       await lendingsApi.create(data);
       toast.success('Lending created successfully');
       onSuccess();
       onClose();
-    } catch (error: any) {
-      const message = error.response?.data?.error || 'Failed to create lending';
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message :
+        'response' in (error as object) ? ((error as {response?: {data?: {error?: string}}}).response?.data?.error || 'Failed to create lending') :
+        'Failed to create lending';
       setError(message);
       toast.error(message);
     } finally {
@@ -147,4 +154,4 @@ export default function LendingForm({ onSuccess, onClose }: LendingFormProps) {
       </div>
     </Form.Root>
   );
-} 
+}
