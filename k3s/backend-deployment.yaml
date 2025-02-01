@@ -59,7 +59,7 @@ metadata:
   name: library-backend-ingress
   namespace: my
   annotations:
-    traefik.ingress.kubernetes.io/ssl-cert: "library-backend-reinhardjs-my-id-tls-secret"
+    traefik.ingress.kubernetes.io/ssl-cert: "reinhardjs-my-id-tls-secret"
     traefik.ingress.kubernetes.io/ssl-redirect: "true"
 spec:
   rules:
