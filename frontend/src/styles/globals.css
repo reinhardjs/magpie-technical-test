@@ -14,8 +14,13 @@
   }
 }
 
+* {
+  color: black;
+}
+
 body {
-  color: var(--foreground);
+  /* color: var(--foreground); */
+  color: black;
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
