@@ -3,6 +3,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, LineChart, Line } 
 import Layout from '@/components/Layout';
 import { analyticsApi } from '@/services/api';
 import { format } from 'date-fns';
+import { canManageLibrary } from '../utils/auth';
 
 export default function Dashboard() {
   const [popularBooks, setPopularBooks] = useState([]);
@@ -11,6 +12,8 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        if (!canManageLibrary()) return;
+
         const [popularBooksRes, lendingTrendsRes] = await Promise.all([
           analyticsApi.getPopularBooks(),
           analyticsApi.getLendingTrends()

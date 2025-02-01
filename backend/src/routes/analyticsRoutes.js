@@ -7,13 +7,13 @@ export default async function analyticsRoutes(fastify, opts) {
 
   // Get popular books (Admin/Librarian only)
   fastify.get('/popular-books',
-    { preHandler: authorize(['ADMIN', 'LIBRARIAN']) },
+    { preHandler: authorize(['ADMIN', 'LIBRARIAN', 'MEMBER']) },
     getPopularBooks
   );
 
   // Get lending trends (Admin/Librarian only)
   fastify.get('/lending-trends',
-    { preHandler: authorize(['ADMIN', 'LIBRARIAN']) },
+    { preHandler: authorize(['ADMIN', 'LIBRARIAN', 'MEMBER']) },
     getLendingTrends
   );
 }

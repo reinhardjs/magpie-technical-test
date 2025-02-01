@@ -5,6 +5,7 @@ import Layout from '@/components/Layout';
 import { lendingsApi, booksApi } from '@/services/api';
 import { format } from 'date-fns';
 import LendingForm from '@/components/LendingForm';
+import { canManageLibrary } from '../utils/auth';
 
 interface Lending {
   id: number;
@@ -28,6 +29,7 @@ export default function Lendings() {
   const [books, setBooks] = useState([]);
 
   useEffect(() => {
+    if (!canManageLibrary()) return
     fetchLendings();
     fetchBooks();
   }, []);

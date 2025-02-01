@@ -4,11 +4,13 @@ import Layout from '@/components/Layout';
 import BookList from '@/components/BookList';
 import BookForm from '@/components/BookForm';
 import { booksApi } from '@/services/api';
+import { canManageLibrary } from '../utils/auth';
 
 export default function Books() {
   const [books, setBooks] = useState([]);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const showActions = canManageLibrary();
 
   useEffect(() => {
     fetchBooks();
@@ -40,19 +42,21 @@ export default function Books() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <Dialog.Root open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-            <Dialog.Trigger asChild>
-              <button className="bg-blue-600 text-white px-4 py-2 rounded-md">
-                Add Book
-              </button>
-            </Dialog.Trigger>
-            <BookForm
-              onSuccess={() => {
-                setIsAddDialogOpen(false);
-                fetchBooks();
-              }}
-            />
-          </Dialog.Root>
+          {showActions &&
+            <Dialog.Root open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+              <Dialog.Trigger asChild>
+                <button className="bg-blue-600 text-white px-4 py-2 rounded-md">
+                  Add Book
+                </button>
+              </Dialog.Trigger>
+              <BookForm
+                onSuccess={() => {
+                  setIsAddDialogOpen(false);
+                  fetchBooks();
+                }}
+              />
+            </Dialog.Root>
+          }
         </div>
 
         <BookList books={filteredBooks} onUpdate={fetchBooks} />
