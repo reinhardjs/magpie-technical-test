@@ -2,6 +2,7 @@ import { useState } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { booksApi } from '@/services/api';
 import BookForm from './BookForm';
+import { toast } from 'react-hot-toast';
 
 interface Book {
   id: number;
@@ -29,9 +30,17 @@ export default function BookList({ books, onUpdate }: BookListProps) {
     if (confirm('Are you sure you want to delete this book?')) {
       try {
         await booksApi.delete(id);
+        toast.success('Book deleted successfully');
         onUpdate();
-      } catch (error) {
-        console.error('Failed to delete book:', error);
+      } catch (error: any) {
+        console.error('Failed to delete book:', {
+          id,
+          error: error.message,
+          response: error.response?.data
+        });
+        
+        const message = error.response?.data?.error || 'Failed to delete book';
+        toast.error(message);
       }
     }
   };

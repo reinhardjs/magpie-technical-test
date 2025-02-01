@@ -1,7 +1,13 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import * as Form from '@radix-ui/react-form';
-import { useState } from 'react';
-import { booksApi } from '@/services/api';
+import { useState, useEffect } from 'react';
+import { booksApi, categoriesApi } from '@/services/api';
+import { toast } from 'react-hot-toast';
+
+interface Category {
+  id: number;
+  name: string;
+}
 
 interface BookFormProps {
   onSuccess: () => void;
@@ -10,24 +16,54 @@ interface BookFormProps {
 
 export default function BookForm({ onSuccess, initialData }: BookFormProps) {
   const [loading, setLoading] = useState(false);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const { data } = await categoriesApi.getAll();
+        setCategories(data);
+      } catch (error: any) {
+        const message = error.response?.data?.error || 'Failed to fetch categories';
+        setError(message);
+        toast.error(message);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
+    setError(null);
 
     try {
       const formData = new FormData(e.currentTarget);
       const data = Object.fromEntries(formData);
+      
+      // Validate required fields
+      const requiredFields = ['title', 'author', 'isbn', 'quantity', 'categoryId'];
+      for (const field of requiredFields) {
+        if (!data[field]) {
+          throw new Error(`${field} is required`);
+        }
+      }
 
       if (initialData) {
         await booksApi.update(initialData.id, data);
+        toast.success('Book updated successfully');
       } else {
         await booksApi.create(data);
+        toast.success('Book created successfully');
       }
 
       onSuccess();
-    } catch (error) {
-      console.error('Failed to save book:', error);
+    } catch (error: any) {
+      const message = error.response?.data?.error || error.message || 'Failed to save book';
+      setError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -40,6 +76,12 @@ export default function BookForm({ onSuccess, initialData }: BookFormProps) {
         <Dialog.Title className="text-xl font-semibold mb-4">
           {initialData ? 'Edit Book' : 'Add New Book'}
         </Dialog.Title>
+
+        {error && (
+          <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded">
+            {error}
+          </div>
+        )}
 
         <Form.Root onSubmit={handleSubmit}>
           <div className="space-y-4">
@@ -94,6 +136,26 @@ export default function BookForm({ onSuccess, initialData }: BookFormProps) {
                   defaultValue={initialData?.quantity || 1}
                   required
                 />
+              </Form.Control>
+            </Form.Field>
+
+            <Form.Field name="categoryId">
+              <Form.Label className="block text-sm font-medium text-gray-700">
+                Category
+              </Form.Label>
+              <Form.Control asChild>
+                <select
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  defaultValue={initialData?.categoryId || ''}
+                  required
+                >
+                  <option value="">Select a category</option>
+                  {categories.map((category) => (
+                    <option key={category.id} value={category.id}>
+                      {category.name}
+                    </option>
+                  ))}
+                </select>
               </Form.Control>
             </Form.Field>
           </div>
