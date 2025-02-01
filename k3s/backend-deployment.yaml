@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: library-backend
+  namespace: my
+spec:
+  replicas: 1
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: library-backend
+  template:
+    metadata:
+      labels:
+        app: library-backend
+    spec:
+      restartPolicy: Always
+      nodeSelector:
+        kubernetes.io/hostname: master-node
+      imagePullSecrets:
+      - name: my-regcred
+      containers:
+      - name: library-backend
+        image: registry.reinhardjs.my.id/library-backend:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3000
+        # env:
+        # - name: DATABASE_URL
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: library-db-secret
+        #       key: database-url
+        # - name: JWT_SECRET
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: library-jwt-secret
+        #       key: jwt-secret
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: library-backend
+  namespace: my
+spec:
+  selector:
+    app: library-backend
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+  type: ClusterIP
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: library-backend-ingress
+  namespace: my
+  annotations:
+    traefik.ingress.kubernetes.io/ssl-cert: "library-backend-reinhardjs-my-id-tls-secret"
+    traefik.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  rules:
+  - host: library-backend.reinhardjs.my.id
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: library-backend
+            port:
+              number: 3000
+  tls:
+  - hosts:
+    - library-backend.reinhardjs.my.id
+    secretName: reinhardjs-my-id-tls-secret
