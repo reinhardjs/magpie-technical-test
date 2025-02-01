@@ -29,7 +29,11 @@ export const register = async (request, reply) => {
 
     return { message: 'User registered successfully', userId: user.id };
   } catch (error) {
-    return reply.status(500).send({ error: 'Registration failed' });
+    console.error('Registration error:', error);
+    return reply.status(500).send({ 
+      error: 'Registration failed',
+      details: error.message 
+    });
   }
 };
 
@@ -58,6 +62,10 @@ export const login = async (request, reply) => {
 
     return { token, user: { id: user.id, email: user.email, role: user.role } };
   } catch (error) {
-    return reply.status(500).send({ error: 'Login failed' });
+    console.error('Login error:', error);
+    return reply.status(500).send({ 
+      error: 'Login failed',
+      details: error.message
+    });
   }
 };
