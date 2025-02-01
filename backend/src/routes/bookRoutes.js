@@ -2,6 +2,8 @@ import {
   createBook,
   getAllBooks,
   updateBook,
+  getBookById,
+  deleteBook
 } from '../controllers/bookController.js';
 
 import { authenticate, authorize } from '../middleware/authMiddleware.js';
@@ -42,6 +44,12 @@ export default async function bookRoutes(fastify, opts) {
     getAllBooks
   );
 
+  // Get book by ID (All authenticated users)
+  fastify.get('/:id',
+    { preHandler: authorize(['ADMIN', 'LIBRARIAN', 'MEMBER']) },
+    getBookById
+  );
+
   // Update a book (Admin/Librarian only)
   fastify.put('/:id',
     {
@@ -51,5 +59,15 @@ export default async function bookRoutes(fastify, opts) {
       ]
     },
     updateBook
+  );
+
+  // Delete a book (Admin/Librarian only)
+  fastify.delete('/:id',
+    {
+      preHandler: [
+        authorize(['ADMIN', 'LIBRARIAN'])
+      ]
+    },
+    deleteBook
   );
 }
