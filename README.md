@@ -1,5 +1,13 @@
 # Digital Library Management System
 
+## Live Demo
+
+- 🌐 Frontend: [library.reinhardjs.my.id](https://library.reinhardjs.my.id)
+- 📚 Backend API Documentation: [library-backend.reinhardjs.my.id/documentation](https://library-backend.reinhardjs.my.id/documentation)
+
+
+## Overview
+
 ![image](https://github.com/user-attachments/assets/15112fcc-fa44-475a-9351-2f7afa79df57)
 
 ## Backend
@@ -136,3 +144,141 @@ The API returns standard HTTP status codes:
 - 403: Forbidden
 - 404: Not Found
 - 500: Server Error
+
+## Frontend
+
+A modern web interface for the Digital Library Management System built with Next.js, React Query, and Tailwind CSS.
+
+### Features
+
+- 🔐 JWT Authentication & Role-based Access Control
+- 📚 Book Management Interface
+- 👥 Member Management Dashboard
+- 📖 Lending Operations
+- 🏷️ Category Organization
+- 📊 Analytics Dashboard
+- 🎨 Responsive Design with Tailwind CSS
+- 🔄 Real-time Data with React Query
+
+### Prerequisites
+
+- Node.js (v16 or higher)
+- npm or yarn
+- Backend API running (see backend README)
+
+### Tech Stack
+
+- **Framework**: Next.js 13
+- **State Management**: React Query
+- **Styling**: Tailwind CSS + Radix UI
+- **Authentication**: JWT with Context API
+- **Forms**: React Hook Form
+- **Type Safety**: TypeScript
+- **Testing**: Vitest + Testing Library
+- **Charts**: Recharts
+
+### Getting Started
+
+1. Clone and navigate to frontend folder:
+```bash
+git clone https://github.com/reinhardjs/magpie-technical-test.git
+cd magpie-technical-test/frontend
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Set up environment variables:
+```bash
+cp .env.example .env.local
+```
+
+Configure in `.env.local`:
+```
+NEXT_PUBLIC_API_URL=http://localhost:3000/api
+```
+
+4. Start development server:
+```bash
+npm run dev
+```
+
+The app will be running on http://localhost:9000
+
+### Available Scripts
+
+```bash
+npm run dev          # Start development server
+npm run build       # Build for production
+npm run start       # Start production server
+npm run test        # Run tests
+```
+
+### Project Structure
+
+```
+src/
+├── __tests__/      # Test files
+├── components/     # Reusable UI components
+├── contexts/       # React Context providers
+├── hooks/         # Custom React hooks
+├── pages/         # Next.js pages
+├── services/      # API service layer
+├── styles/        # Global styles
+├── types/         # TypeScript types
+└── utils/         # Utility functions
+```
+
+### Key Components
+
+### Authentication
+- Login/Register forms
+- JWT token management
+- Protected routes
+- Role-based access control
+
+### Book Management
+- Book listing with filters
+- Add/Edit/Delete books
+- Book details view
+- Book status tracking
+
+### Member Management
+- Member registration
+- Member listing
+- Profile management
+- Borrowing history
+
+### Lending Operations
+- Book borrowing
+- Return processing
+- Due date management
+- Fine calculation
+
+### Analytics Dashboard
+- Popular books
+- Lending trends
+- Member statistics
+- Category distribution
+
+### Testing
+
+The frontend uses Vitest and Testing Library for:
+- Integration tests
+
+Example test structure:
+```typescript:frontend/src/__tests__/integration/BookOperations.test.tsx
+startLine: 1
+endLine: 25
+```
+
+### Error Handling
+
+The application handles:
+- API errors
+- Authentication errors
+- Form validation
+- Network issues
+- Loading states
