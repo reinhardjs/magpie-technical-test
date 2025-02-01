@@ -91,7 +91,7 @@ export default function BookForm({ onSuccess, initialData }: BookFormProps) {
               </Form.Label>
               <Form.Control asChild>
                 <input
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-3 py-2"
                   defaultValue={initialData?.title}
                   required
                 />
@@ -104,7 +104,7 @@ export default function BookForm({ onSuccess, initialData }: BookFormProps) {
               </Form.Label>
               <Form.Control asChild>
                 <input
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-3 py-2"
                   defaultValue={initialData?.author}
                   required
                 />
@@ -117,7 +117,7 @@ export default function BookForm({ onSuccess, initialData }: BookFormProps) {
               </Form.Label>
               <Form.Control asChild>
                 <input
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-3 py-2"
                   defaultValue={initialData?.isbn}
                   required
                 />
@@ -132,7 +132,7 @@ export default function BookForm({ onSuccess, initialData }: BookFormProps) {
                 <input
                   type="number"
                   min="1"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-3 py-2"
                   defaultValue={initialData?.quantity || 1}
                   required
                 />
@@ -145,7 +145,7 @@ export default function BookForm({ onSuccess, initialData }: BookFormProps) {
               </Form.Label>
               <Form.Control asChild>
                 <select
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-3 py-2"
                   defaultValue={initialData?.categoryId || ''}
                   required
                 >
