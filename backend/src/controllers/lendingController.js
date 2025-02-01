@@ -1,45 +1,81 @@
 import { PrismaClient } from '@prisma/client';
+import { z } from 'zod';
 
 const prisma = new PrismaClient();
 
-export const createLending = async (request, reply) => {
-  const { bookId, memberId } = request.body;
-  const createdBy = request.user.id;
+const lendingSchema = z.object({
+  bookId: z.number().positive('Book ID is required'),
+  memberId: z.number().positive('Member ID is required')
+});
 
+export const createLending = async (request, reply) => {
   try {
+    const { bookId, memberId } = lendingSchema.parse(request.body);
+    const createdBy = request.user.id;
+
     // Check book availability
     const bookStatus = await prisma.bookStatus.findUnique({
-      where: { bookId: parseInt(bookId) }
+      where: { bookId: parseInt(bookId) },
+      include: { book: true }
     });
 
     if (!bookStatus || bookStatus.availableQty <= 0) {
-      return reply.status(400).send({ error: 'Book not available' });
+      request.log.warn(`Attempted to lend unavailable book: ${bookId}`);
+      return reply.status(400).send({ error: 'Book not available for lending' });
     }
 
-    // Create lending record
-    const lending = await prisma.lending.create({
-      data: {
-        bookId: parseInt(bookId),
-        memberId: parseInt(memberId),
-        borrowedDate: new Date(),
-        dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 days
-        status: 'ACTIVE',
-        createdBy
-      }
+    // Check member exists and is active
+    const member = await prisma.member.findUnique({
+      where: { id: parseInt(memberId) }
     });
 
-    // Update book status
-    await prisma.bookStatus.update({
-      where: { bookId: parseInt(bookId) },
-      data: {
-        availableQty: { decrement: 1 },
-        borrowedQty: { increment: 1 }
-      }
+    if (!member || member.status !== 'ACTIVE') {
+      request.log.warn(`Attempted to lend to inactive/nonexistent member: ${memberId}`);
+      return reply.status(400).send({ error: 'Member is not active or does not exist' });
+    }
+
+    const lending = await prisma.$transaction(async (prisma) => {
+      const lending = await prisma.lending.create({
+        data: {
+          bookId: parseInt(bookId),
+          memberId: parseInt(memberId),
+          borrowedDate: new Date(),
+          dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+          status: 'ACTIVE',
+          createdBy
+        }
+      });
+
+      await prisma.bookStatus.update({
+        where: { bookId: parseInt(bookId) },
+        data: {
+          availableQty: { decrement: 1 },
+          borrowedQty: { increment: 1 }
+        }
+      });
+
+      return lending;
     });
 
-    return lending;
+    request.log.info(`Lending created: ${lending.id}`);
+    return reply.code(201).send(lending);
   } catch (error) {
-    return reply.status(500).send({ error: 'Lending creation failed' });
+    if (error instanceof z.ZodError) {
+      return reply.status(400).send({ 
+        error: error.errors[0].message 
+      });
+    }
+    
+    request.log.error({
+      msg: 'Lending creation failed',
+      error: error.message,
+      stack: error.stack
+    });
+    
+    return reply.status(500).send({ 
+      error: 'Lending creation failed',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 };
 
