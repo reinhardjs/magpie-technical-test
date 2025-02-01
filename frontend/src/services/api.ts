@@ -38,6 +38,13 @@ export const booksApi = {
   delete: (id: number) => api.delete(`/books/${id}`)
 };
 
+export const categoriesApi = {
+  getAll: () => api.get('/categories'),
+  create: (data: any) => api.post('/categories', data),
+  update: (id: number, data: any) => api.put(`/categories/${id}`, data),
+  delete: (id: number) => api.delete(`/categories/${id}`)
+};
+
 export const lendingsApi = {
   getAll: () => api.get('/lendings'),
   create: (data: any) => api.post('/lendings', data),
