@@ -8,8 +8,6 @@ RUN npm install
 COPY .env .
 COPY . .
 
-RUN npm run build
-
 EXPOSE 9000
 
-CMD ["npm", "start"]
+CMD ["npm", "run", "dev"]
