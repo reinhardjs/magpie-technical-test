@@ -98,26 +98,38 @@ export default function Lendings() {
           </Dialog.Root>
         </div>
 
-        <table className="min-w-full">
+        <table className="min-w-full divide-y divide-gray-200">
           <thead>
             <tr>
-              <th className="px-6 py-3 text-left text-xs uppercase tracking-wider">Book</th>
-              <th className="px-6 py-3 text-left text-xs uppercase tracking-wider">Member</th>
-              <th className="px-6 py-3 text-left text-xs uppercase tracking-wider">Borrowed Date</th>
-              <th className="px-6 py-3 text-left text-xs uppercase tracking-wider">Due Date</th>
-              <th className="px-6 py-3 text-left text-xs uppercase tracking-wider">Status</th>
-              <th className="px-6 py-3 text-left text-xs uppercase tracking-wider">Actions</th>
+              <th className="px-6 py-3 text-left text-xs uppercase tracking-wider">
+                Book
+              </th>
+              <th className="px-6 py-3 text-left text-xs uppercase tracking-wider">
+                Member
+              </th>
+              <th className="px-6 py-3 text-left text-xs uppercase tracking-wider">
+                Borrowed Date
+              </th>
+              <th className="px-6 py-3 text-left text-xs uppercase tracking-wider">
+                Due Date
+              </th>
+              <th className="px-6 py-3 text-left text-xs uppercase tracking-wider">
+                Status
+              </th>
+              <th className="px-6 py-3 text-left text-xs uppercase tracking-wider">
+                Actions
+              </th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="bg-white divide-y divide-gray-200">
             {filteredLendings.map((lending) => (
-              <tr key={lending.id} className="border-b">
-                <td className="py-4">{lending.book.title}</td>
-                <td className="py-4">{lending.member.name}</td>
-                <td className="py-4">{format(new Date(lending.borrowedDate), 'MMM dd, yyyy')}</td>
-                <td className="py-4">{format(new Date(lending.dueDate), 'MMM dd, yyyy')}</td>
-                <td className="py-4">{lending.status}</td>
-                <td className="py-4">
+              <tr key={lending.id}>
+                <td className="px-6 py-4 whitespace-nowrap">{lending.book.title}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{lending.member.name}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{format(new Date(lending.borrowedDate), 'MMM dd, yyyy')}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{format(new Date(lending.dueDate), 'MMM dd, yyyy')}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{lending.status}</td>
+                <td className="px-6 py-4 whitespace-nowrap">
                   {lending.status === 'ACTIVE' && (
                     <button
                       onClick={() => handleReturn(lending.id)}
