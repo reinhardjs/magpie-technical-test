@@ -75,8 +75,6 @@ export default function BookList({ books, onUpdate }: BookListProps) {
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
           {books.map((book) => { 
-            console.log("LOG: ", deletingBook?.id)
-            console.log("LOG: ", book.id)
             return (
             <tr key={book.id}>
               <td className="px-6 py-4 whitespace-nowrap">{book.title}</td>
@@ -89,7 +87,10 @@ export default function BookList({ books, onUpdate }: BookListProps) {
               <td className="px-6 py-4 whitespace-nowrap space-x-2">
                 <Dialog.Root open={editingBook?.id === book.id} onOpenChange={(open) => !open && setEditingBook(null)}>
                   <Dialog.Trigger asChild>
-                    <button className="text-blue-600 hover:text-blue-800">
+                    <button 
+                      className="text-blue-600 hover:text-blue-800"
+                      onClick={() => setEditingBook(book)}
+                    >
                       Edit
                     </button>
                   </Dialog.Trigger>
@@ -106,9 +107,10 @@ export default function BookList({ books, onUpdate }: BookListProps) {
 
                 <Dialog.Root open={deletingBook?.id === book.id} onOpenChange={(open) => !open && setDeletingBook(null)}>
                   <Dialog.Trigger asChild>
-                    <button className="text-red-600 hover:text-red-800" onClick={ () => {
-                      setDeletingBook(book)
-                    }}>
+                    <button 
+                      className="text-red-600 hover:text-red-800" 
+                      onClick={() => setDeletingBook(book)}
+                    >
                       Delete
                     </button>
                   </Dialog.Trigger>
