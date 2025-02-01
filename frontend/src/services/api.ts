@@ -45,6 +45,14 @@ export const categoriesApi = {
   delete: (id: number) => api.delete(`/categories/${id}`)
 };
 
+export const membersApi = {
+  getAll: () => api.get('/members'),
+  getById: (id: number) => api.get(`/members/${id}`),
+  create: (data: any) => api.post('/members', data),
+  update: (id: number, data: any) => api.put(`/members/${id}`, data),
+  delete: (id: number) => api.delete(`/members/${id}`)
+};
+
 export const lendingsApi = {
   getAll: () => api.get('/lendings'),
   create: (data: any) => api.post('/lendings', data),
